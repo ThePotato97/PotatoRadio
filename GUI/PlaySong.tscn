@@ -1,0 +1,96 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Assets/Themes/main.tres" type="Theme" id=1]
+[ext_resource path="res://Assets/Themes/panel_med.tres" type="StyleBox" id=2]
+[ext_resource path="res://Scenes/Menus/Main Menu/ui_generic_button.gd" type="Script" id=3]
+[ext_resource path="res://mods/PotatoRadio/GUI/PlaySong.gd" type="Script" id=4]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 1 )
+script = ExtResource( 4 )
+
+[node name="Panel" type="Panel" parent="."]
+anchor_left = 0.3
+anchor_top = 0.656
+anchor_right = 0.7
+anchor_bottom = 0.8
+margin_top = -0.480042
+
+[node name="buttons" type="Control" parent="Panel"]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Panel" type="Panel" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = 16.0
+margin_right = -16.0
+margin_bottom = -16.0
+custom_styles/panel = ExtResource( 2 )
+
+[node name="close" type="Button" parent="Panel"]
+anchor_left = 0.898438
+anchor_top = -0.0493827
+anchor_right = 1.03507
+anchor_bottom = 0.0319382
+margin_right = 0.0640259
+margin_bottom = 0.304016
+rect_pivot_offset = Vector2( 243, 71 )
+text = "Close"
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
+anchor_left = 0.515625
+anchor_top = 0.929012
+anchor_right = 0.963458
+anchor_bottom = 1.02496
+margin_right = 0.0639992
+margin_bottom = -0.176003
+custom_constants/separation = 13
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="reset" type="Button" parent="Panel/HBoxContainer"]
+margin_right = 174.0
+margin_bottom = 34.0
+rect_pivot_offset = Vector2( 243, 71 )
+size_flags_horizontal = 3
+text = "Reset To Default"
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="play" type="Button" parent="Panel/HBoxContainer"]
+margin_left = 187.0
+margin_right = 343.0
+margin_bottom = 34.0
+rect_pivot_offset = Vector2( 243, 71 )
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.49
+text = "Play"
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="URL" type="LineEdit" parent="Panel"]
+margin_left = 51.0
+margin_top = 33.0
+margin_right = 638.0
+margin_bottom = 82.0
+focus_mode = 1
+placeholder_text = "Enter youtube URL"
+
+[connection signal="pressed" from="Panel/HBoxContainer/play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Panel/HBoxContainer/play" to="Panel/HBoxContainer/play" method="_on_play_pressed"]
+[connection signal="text_changed" from="Panel/URL" to="." method="_on_URL_text_changed"]
