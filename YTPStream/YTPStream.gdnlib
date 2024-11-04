@@ -1,0 +1,14 @@
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=false
+
+[entry]
+
+Windows.64="./GDWeave/mods/PotatoRadio/audio_stream.dll"
+
+[dependencies]
+
+Windows.64=[  ]

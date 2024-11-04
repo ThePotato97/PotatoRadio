@@ -1,18 +1,19 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://mods/PotatoRadio/Prop/prop_potato_radio.gd" type="Script" id=1]
 [ext_resource path="res://mods/PotatoRadio/Prop/prop_potato_radio_int.gd" type="Script" id=2]
-[ext_resource path="res://Assets/Models/boombox.obj" type="ArrayMesh" id=3]
+[ext_resource path="res://mods/PotatoRadio/Prop/boombox.obj" type="ArrayMesh" id=3]
 
 [sub_resource type="SpatialMaterial" id=3]
 albedo_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="AudioStreamGenerator" id=4]
+buffer_length = 5.0
 
 [sub_resource type="BoxShape" id=2]
 
 [node name="boombox" type="KinematicBody"]
 script = ExtResource( 1 )
-delete_on_owner_disconnect = true
-force_call_actions = true
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 transform = Transform( 0.193313, 0, 0, 0, 0.193313, 0, 0, 0, 0.193313, 0, 0.193456, 0 )
@@ -20,14 +21,14 @@ mesh = ExtResource( 3 )
 material/0 = SubResource( 3 )
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource( 4 )
 unit_size = 5.0
 max_db = -15.0
 max_distance = 35.0
-bus = "Radio"
 
 [node name="Interactable" type="Area" parent="."]
 script = ExtResource( 2 )
-text = "TURN ON"
+text = "OPEN GUI"
 
 [node name="CollisionShape" type="CollisionShape" parent="Interactable"]
 transform = Transform( 0.564184, 0, 0, 0, 0.430603, 0, 0, 0, 0.398955, 0, 0.319206, 0 )

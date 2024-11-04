@@ -13,10 +13,12 @@ script = ExtResource( 4 )
 
 [node name="Panel" type="Panel" parent="."]
 anchor_left = 0.3
-anchor_top = 0.656
+anchor_top = 0.395
 anchor_right = 0.7
-anchor_bottom = 0.8
-margin_top = -0.480042
+anchor_bottom = 0.54
+margin_top = 0.399994
+margin_right = -0.00012207
+margin_bottom = -0.200012
 
 [node name="buttons" type="Control" parent="Panel"]
 show_behind_parent = true
@@ -59,19 +61,19 @@ __meta__ = {
 "_edit_use_anchors_": true
 }
 
-[node name="reset" type="Button" parent="Panel/HBoxContainer"]
-margin_right = 174.0
+[node name="stop" type="Button" parent="Panel/HBoxContainer"]
+margin_right = 132.0
 margin_bottom = 34.0
 rect_pivot_offset = Vector2( 243, 71 )
 size_flags_horizontal = 3
-text = "Reset To Default"
+text = "Stop"
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": true
 }
 
 [node name="play" type="Button" parent="Panel/HBoxContainer"]
-margin_left = 187.0
+margin_left = 145.0
 margin_right = 343.0
 margin_bottom = 34.0
 rect_pivot_offset = Vector2( 243, 71 )
@@ -89,8 +91,10 @@ margin_top = 33.0
 margin_right = 638.0
 margin_bottom = 82.0
 focus_mode = 1
-placeholder_text = "Enter youtube URL"
+placeholder_text = "Enter media URL"
 
+[connection signal="pressed" from="Panel/close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Panel/close" to="Panel/close" method="_on_close_pressed"]
+[connection signal="pressed" from="Panel/HBoxContainer/stop" to="." method="_on_stop_pressed"]
 [connection signal="pressed" from="Panel/HBoxContainer/play" to="." method="_on_play_pressed"]
-[connection signal="pressed" from="Panel/HBoxContainer/play" to="Panel/HBoxContainer/play" method="_on_play_pressed"]
 [connection signal="text_changed" from="Panel/URL" to="." method="_on_URL_text_changed"]

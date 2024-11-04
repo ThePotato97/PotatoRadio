@@ -1,46 +1,68 @@
 extends PlayerProp
 
-var state = - 1
+var state = null
 
-onready var audio = $AudioStreamPlayer3D
-onready var gui_scene = preload("res://mods/PotatoRadio/GUI/PlaySong.tscn")
 
-var gui
+onready var _audio = $AudioStreamPlayer3D
+onready var _interactable = $Interactable
+onready var PlaySongGui = preload("res://mods/PotatoRadio/GUI/PlaySong.tscn")
+
+onready var Lure = get_node("/root/SulayreLure")
+onready var PotatoRadio = get_node("/root/PotatoRadio")
+
+var _prop_gui
 
 func _ready():
-	gui = gui_scene.instance()
-	get_tree().current_scene.add_child(gui)
+	print("spawned radio")
 
-func _sync_add_state():
-	var new_state = state + 1
-	if new_state > 4: new_state = - 1
-	_set_state(new_state)
-	Network._send_actor_action(actor_id, "_set_state", [new_state], true)
+	if PlaySongGui:
+		_prop_gui = PlaySongGui.instance()
+		_prop_gui.hide()
+		get_tree().root.add_child(_prop_gui)
+		_prop_gui.connect("play_url", self, "sync_radio_play")
+		_prop_gui.connect("stop", self, "sync_radio_stop")
 
-func _set_state(new):
-	print("SETTING STATE")
-	state = new
+	var generator = AudioStreamGenerator.new()
+	generator.buffer_length = 15
+	_audio.stream = generator
+	_audio.stream.mix_rate = PotatoRadio.SAMPLE_HZ
 
-	$Interactable.text = "OPEN GUI"
-	
-	match state:
-		- 1:
-			audio.playing = false
-		0:
-			audio.stream = preload("res://Sounds/Fluffing a Duck.mp3")
-			audio.playing = true
-		1:
-			audio.stream = preload("res://Sounds/Carefree.mp3")
-			audio.playing = true
-		2:
-			audio.stream = preload("res://Sounds/Heartbreaking.mp3")
-			audio.playing = true
-		3:
-			audio.stream = preload("res://Sounds/Sneaky Snitch.mp3")
-			audio.playing = true
-		4:
-			audio.stream = preload("res://Sounds/Meatball Parade.mp3")
-			audio.playing = true
+func _exit_tree():
+	PotatoRadio.stop(actor_id)
+	if _prop_gui:
+		_prop_gui.queue_free()
+
+func stop_radio():
+	PotatoRadio.stop(actor_id)
+
+func sync_radio_stop():
+	stop_radio()
+	Network._send_actor_action(actor_id, "stop_radio", [], true)
+
+func play_radio(url):
+	if not url or not PotatoRadio: return
+	PotatoRadio.play_url(actor_id, url, _audio)
+
+func _process(delta):
+	if not PotatoRadio: return
+	var is_active = PotatoRadio.is_radio_active(actor_id)
+	if is_active:
+		_interactable.text = "OPEN GUI"
+	else:
+		_interactable.text = "TURN ON"
+
+func sync_radio_play(url):
+	play_radio(url)
+	Network._send_actor_action(actor_id, "play_radio", [url], true)
+
 
 func _on_Interactable__activated():
-	_sync_add_state()
+	var is_active = PotatoRadio.is_radio_active(actor_id)
+	if is_active:
+		_prop_gui.show()
+	else:
+		PotatoRadio.set_active_radio(actor_id)
+		if state != null:
+			_prop_gui.set_url(state)
+			play_radio(state)
+

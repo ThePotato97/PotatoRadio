@@ -1,24 +1,32 @@
 extends Control
 
-var target = null
+signal play_url(url)
 
-func set_target(new_target):
-	target = new_target
+signal stop
 
-func _on_Button_pressed():
-	if target:
-		target._sync_add_state()  # Call the function to change state
+func show():
+	visible = true
 
-func update_label(text):
-	$Label.text = text  # Update the label with the current state
-
+func hide():
+	visible = false
 
 func _on_play_pressed():
-	print("play pressed")
-	pass # Replace with function body.
+	var url = $Panel/URL.text
+	emit_signal("play_url", url)
+	hide()
 
+func set_url(url: String):
+	var text_box = $Panel/URL
+	if text_box:
+		text_box.text = url
 
 func _on_URL_text_changed(new_text):
 	print(new_text)
 	accept_event()
-	pass # Replace with function body.
+
+func _on_close_pressed():
+	hide()
+
+
+func _on_stop_pressed():
+	emit_signal("stop")
