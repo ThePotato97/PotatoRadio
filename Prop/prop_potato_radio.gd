@@ -39,8 +39,9 @@ func sync_radio_stop():
 	stop_radio()
 	Network._send_actor_action(actor_id, "stop_radio", [], true)
 
-func play_radio(url):
+func play_radio(url): # TODO: Add a check to see if the url is valid
 	if not url or not PotatoRadio: return
+	state = url
 	PotatoRadio.play_url(actor_id, url, _audio)
 
 func _process(delta):
