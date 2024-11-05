@@ -44,7 +44,7 @@ func play_url(id, url: String, player):
 
 func _ready():
 	if Lure:
-		
+		Lure.add_content(ID, "potato_title", "mod://Prop/custom_title.tres", [])
 		Lure.add_content(ID,"potato_radio", "mod://Prop/prop_potato_radio.tres", [Lure.LURE_FLAGS.SHOP_POSSUM, Lure.LURE_FLAGS.FREE_UNLOCK])
 		Lure.add_actor(ID, "potato_radio", "mod://Prop/prop_potato_radio.tscn")
 		

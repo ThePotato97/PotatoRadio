@@ -3,6 +3,7 @@ extends Control
 signal play_url(url)
 
 signal stop
+signal set_volume(volume)
 
 func show():
 	visible = true
@@ -30,3 +31,9 @@ func _on_close_pressed():
 
 func _on_stop_pressed():
 	emit_signal("stop")
+
+
+func _on_music_vol_value_changed(value):
+	var music_label = $Panel/muc_vol/VBoxContainer/music_label
+	emit_signal("set_volume", value)
+	music_label.text = str(value * 100.0) + "%"

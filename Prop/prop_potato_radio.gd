@@ -12,6 +12,9 @@ onready var PotatoRadio = get_node("/root/PotatoRadio")
 
 var _prop_gui
 
+var MIN_VOLUME = -10
+var MAX_VOLUME = 10
+
 func _ready():
 	print("spawned radio")
 
@@ -21,6 +24,7 @@ func _ready():
 		get_tree().root.add_child(_prop_gui)
 		_prop_gui.connect("play_url", self, "sync_radio_play")
 		_prop_gui.connect("stop", self, "sync_radio_stop")
+		_prop_gui.connect("set_volume", self, "set_radio_volume")
 
 	var generator = AudioStreamGenerator.new()
 	generator.buffer_length = 15
@@ -51,6 +55,10 @@ func _process(delta):
 		_interactable.text = "OPEN GUI"
 	else:
 		_interactable.text = "TURN ON"
+
+func set_radio_volume(volume):
+	_audio.unit_db = MIN_VOLUME + (MAX_VOLUME - MIN_VOLUME) * volume
+
 
 func sync_radio_play(url):
 	play_radio(url)

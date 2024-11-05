@@ -7,7 +7,7 @@ reloadable=false
 
 [entry]
 
-Windows.64="./GDWeave/mods/PotatoRadio/audio_stream.dll"
+Windows.64="res://mods/PotatoRadio/YTPStream/audio_stream.dll"
 
 [dependencies]
 
