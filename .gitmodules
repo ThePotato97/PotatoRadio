@@ -1,0 +1,3 @@
+[submodule "GodotAudioStream"]
+	path = GodotAudioStream
+	url = https://github.com/ThePotato97/GodotAudioStream.git
