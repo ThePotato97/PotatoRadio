@@ -1,24 +1,100 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Assets/Themes/main.tres" type="Theme" id=1]
 [ext_resource path="res://Assets/Themes/panel_med.tres" type="StyleBox" id=2]
 [ext_resource path="res://Scenes/Menus/Main Menu/ui_generic_button.gd" type="Script" id=3]
 [ext_resource path="res://mods/PotatoRadio/GUI/PlaySong.gd" type="Script" id=4]
+[ext_resource path="res://Assets/Themes/main_font.tres" type="DynamicFont" id=5]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float corner_radius = 120;
+
+bool in_rect(vec2 uv,vec2 orign,vec2 end)
+{
+  return all(lessThan(uv,end))&&all( greaterThan(uv,orign));
+}
+
+bool is_hid(vec2 uv,vec2 size,float radius)
+{
+  vec2 center = vec2(size.x*0.5,size.y*0.5);
+  vec2 a = vec2(radius,radius);
+  vec2 b = vec2(size.x-radius,size.y-radius);
+	
+  vec2 c = vec2(size.x-radius,radius);
+  vec2 d = vec2(radius,size.y-radius);
+	
+  vec2 rd_origin = vec2(size.x - radius,0);
+  vec2 rd_end = vec2(size.x,radius);
+	
+  vec2 lu_origin = vec2(0,size.y - radius);
+  vec2 lu_end = vec2(radius,size.y);
+	
+	
+  if(!in_rect(uv,a,b))
+  {
+    float dis = radius - 1.f;
+    if(in_rect(uv,vec2(0.f),a))
+    {
+      dis = distance(a,uv);
+    }
+    if(in_rect(uv,b,size))
+    {
+      dis = distance(b,uv);
+    }
+    if(in_rect(uv,rd_origin,rd_end))
+    {			
+      dis = distance(c,uv);
+    }
+    if(in_rect(uv,lu_origin,lu_end))
+    {
+      dis = distance(d,uv);
+    }
+    return dis > radius;		
+  }
+  return false;
+}
+
+
+void fragment() 
+{
+  float pixel_size_x = 1.0 / TEXTURE_PIXEL_SIZE.x;
+  float pixel_size_y = 1.0 / TEXTURE_PIXEL_SIZE.y;
+  float max_r = min(pixel_size_x,pixel_size_y) / 2.f;
+
+if(is_hid(vec2(UV.x*pixel_size_x,UV.y*pixel_size_y),vec2(pixel_size_x,pixel_size_y),min(corner_radius,max_r)))  
+  {
+    COLOR = vec4(0.0);
+  }
+  else 
+  {
+    COLOR = texture(TEXTURE,UV);
+  }
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/corner_radius = 35.0
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 77.0
+margin_top = -1.0
+margin_right = 77.0
+margin_bottom = -1.0
 theme = ExtResource( 1 )
 script = ExtResource( 4 )
 
 [node name="Panel" type="Panel" parent="."]
 anchor_left = 0.3
-anchor_top = 0.395
-anchor_right = 0.7
-anchor_bottom = 0.54
-margin_top = 0.399994
-margin_right = -0.00012207
-margin_bottom = -0.200012
+anchor_top = 0.243
+anchor_right = 0.651
+anchor_bottom = 0.63
+margin_top = -40.44
+margin_right = -0.920044
+margin_bottom = -0.400024
 
 [node name="buttons" type="Control" parent="Panel"]
 show_behind_parent = true
@@ -50,9 +126,9 @@ __meta__ = {
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel"]
 anchor_left = 0.494792
-anchor_top = 0.935897
+anchor_top = 0.935407
 anchor_right = 0.942625
-anchor_bottom = 1.15497
+anchor_bottom = 1.07458
 margin_right = 0.0639992
 margin_bottom = -0.176003
 custom_constants/separation = 13
@@ -62,8 +138,8 @@ __meta__ = {
 }
 
 [node name="stop" type="Button" parent="Panel/HBoxContainer"]
-margin_right = 132.0
-margin_bottom = 34.0
+margin_right = 115.0
+margin_bottom = 63.0
 rect_pivot_offset = Vector2( 243, 71 )
 size_flags_horizontal = 3
 text = "Stop"
@@ -73,9 +149,9 @@ __meta__ = {
 }
 
 [node name="play" type="Button" parent="Panel/HBoxContainer"]
-margin_left = 145.0
-margin_right = 343.0
-margin_bottom = 34.0
+margin_left = 128.0
+margin_right = 301.0
+margin_bottom = 63.0
 rect_pivot_offset = Vector2( 243, 71 )
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 1.49
@@ -86,31 +162,35 @@ __meta__ = {
 }
 
 [node name="URL" type="LineEdit" parent="Panel"]
-margin_left = 48.0
-margin_top = 30.0
-margin_right = 635.0
-margin_bottom = 79.0
+anchor_left = 0.058
+anchor_top = 0.808
+anchor_right = 0.949
+anchor_bottom = 0.915
+margin_left = -0.0340004
+margin_top = -3.06403
+margin_right = 0.322937
+margin_bottom = -3.07001
 focus_mode = 1
-placeholder_text = "Enter media URL"
+placeholder_text = " Enter media URL"
 
 [node name="muc_vol" type="HBoxContainer" parent="Panel"]
-margin_left = 375.0
-margin_top = 70.0
-margin_right = 723.0
-margin_bottom = 130.0
+margin_left = 290.0
+margin_top = 290.0
+margin_right = 638.0
+margin_bottom = 376.0
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="Panel/muc_vol"]
-margin_top = 13.0
+margin_top = 26.0
 margin_right = 172.0
-margin_bottom = 47.0
+margin_bottom = 60.0
 size_flags_horizontal = 3
 text = "Volume: "
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel/muc_vol"]
 margin_left = 176.0
 margin_right = 348.0
-margin_bottom = 60.0
+margin_bottom = 86.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = -6
@@ -131,6 +211,74 @@ max_value = 2.0
 step = 0.01
 value = 1.0
 script = ExtResource( 3 )
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+material = SubResource( 2 )
+anchor_left = 0.046
+anchor_top = 0.234
+anchor_right = 0.289
+anchor_bottom = 0.626
+margin_left = -1.95803
+margin_top = -5.092
+margin_right = 13.963
+margin_bottom = -5.168
+expand = true
+stretch_mode = 1
+
+[node name="PlaybackSlider" type="HSlider" parent="Panel"]
+anchor_left = 0.306
+anchor_top = 0.5
+anchor_right = 0.9
+anchor_bottom = 0.609
+margin_left = 19.062
+margin_top = 15.52
+margin_right = 19.3
+margin_bottom = 0.157959
+max_value = 1.0
+step = 0.001
+value = 0.1
+
+[node name="SongName" type="RichTextLabel" parent="Panel"]
+anchor_left = 0.318
+anchor_top = 0.229
+anchor_right = 0.939
+anchor_bottom = 0.416
+margin_left = 6.98599
+margin_top = 0.19799
+margin_right = 7.05292
+margin_bottom = -0.00798035
+size_flags_horizontal = 3
+custom_colors/default_color = Color( 1, 1, 1, 1 )
+tab_size = 24
+text = "Song Name"
+
+[node name="CurrentTime" type="RichTextLabel" parent="Panel"]
+anchor_left = 0.302
+anchor_top = 0.607
+anchor_right = 0.397
+anchor_bottom = 0.695
+margin_left = 18.754
+margin_top = -7.00601
+margin_right = 18.819
+margin_bottom = -7.15005
+rect_pivot_offset = Vector2( 50, 19 )
+custom_colors/default_color = Color( 1, 1, 1, 1 )
+custom_fonts/normal_font = ExtResource( 5 )
+text = "00:00"
+
+[node name="OwnerLabel" type="RichTextLabel" parent="Panel"]
+anchor_left = 0.068
+anchor_top = 0.092
+anchor_right = 0.759
+anchor_bottom = 0.175
+margin_left = -9.764
+margin_top = -3.136
+margin_right = -14.807
+margin_bottom = -3.15001
+custom_colors/default_color = Color( 1, 1, 1, 1 )
+bbcode_enabled = true
+bbcode_text = "No one's Radio"
+text = "No one's Radio"
 
 [connection signal="pressed" from="Panel/close" to="." method="_on_close_pressed"]
 [connection signal="pressed" from="Panel/close" to="Panel/close" method="_on_close_pressed"]
